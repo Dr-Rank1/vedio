@@ -1,7 +1,15 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+}
+
+// Load signing credentials from keystore.properties (never committed to VCS)
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = Properties().also { props ->
+    if (keystorePropsFile.exists()) props.load(keystorePropsFile.inputStream())
 }
 
 android {
@@ -16,6 +24,31 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile     = file(keystoreProps["storeFile"] as String)
+            storePassword = keystoreProps["storePassword"] as String
+            keyAlias      = keystoreProps["keyAlias"] as String
+            keyPassword   = keystoreProps["keyPassword"] as String
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled   = true
+            isShrinkResources = true
+            signingConfig     = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+        }
+    }
+
     buildFeatures {
         viewBinding = true
     }
@@ -27,6 +60,12 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    bundle {
+        language { enableSplit = true }
+        density  { enableSplit = true }
+        abi      { enableSplit = true }
     }
 
     packaging {
