@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:overScrollMode="never">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
+
+        <!-- Handle bar -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:background="#2A2A3A"
+            android:backgroundTint="@color/colorBorder" />
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp" />
+
+        <!-- ===== APPEARANCE SECTION ===== -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="APPEARANCE"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="10dp" />
+
+        <!-- Theme toggle row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="20dp">
+
+            <TextView
+                android:id="@+id/btnThemeLight"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="☀ Light"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:textColor="@color/colorTextPrimary"
+                android:background="@drawable/chip_unselected_bg"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnThemeSystem"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="⊙ System"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:textColor="@color/colorTextPrimary"
+                android:background="@drawable/chip_selected_bg"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnThemeDark"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="☾ Dark"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:textColor="@color/colorTextPrimary"
+                android:background="@drawable/chip_unselected_bg"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBorder"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ===== DOWNLOADS SECTION ===== -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DOWNLOADS"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="10dp" />
+
+        <!-- Save location row -->
+        <LinearLayout
+            android:id="@+id/rowSaveLocation"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save Location"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/saveLocationPath"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Downloads"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="›"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <!-- Download quality toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Download Quality"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnQualityHD"
+                    android:layout_width="56dp"
+                    android:layout_height="34dp"
+                    android:text="HD"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textStyle="bold"
+                    android:background="@drawable/chip_selected_bg"
+                    android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/btnQualitySD"
+                    android:layout_width="56dp"
+                    android:layout_height="34dp"
+                    android:text="SD"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/colorTextSecondary"
+                    android:background="@drawable/chip_unselected_bg"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Remove watermark switch (TikTok) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remove Watermark"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TikTok downloads only"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchWatermark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorBorder"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ===== STORAGE SECTION ===== -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STORAGE"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="10dp" />
+
+        <!-- Stats row -->
+        <TextView
+            android:id="@+id/txtStorageStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0 videos · 0 B"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="13sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="12dp" />
+
+        <!-- Clear All History -->
+        <TextView
+            android:id="@+id/btnClearHistory"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Clear All History"
+            android:textColor="@color/colorError"
+            android:textSize="15sp"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Clear Cache -->
+        <TextView
+            android:id="@+id/btnClearCache"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Clear Cache"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="15sp"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Version -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VideoSaver v1.0"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingTop="12dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

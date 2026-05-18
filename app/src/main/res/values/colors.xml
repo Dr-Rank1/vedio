@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light mode colours -->
+    <color name="colorBackground">#F2F2FA</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceVariant">#EDEDF5</color>
+    <color name="colorAccent">#6C63FF</color>
+    <color name="colorAccentSecondary">#FF6B9D</color>
+    <color name="colorSuccess">#00B894</color>
+    <color name="colorError">#E84757</color>
+    <color name="colorTextPrimary">#0A0A0F</color>
+    <color name="colorTextSecondary">#7777AA</color>
+    <color name="colorBorder">#D0D0E8</color>
+    <color name="colorCardShadow">#1A000000</color>
+
+    <!-- Chip tokens (light) -->
+    <color name="colorChipText">#3A3A5C</color>
+    <color name="colorChipBg">#E8E8F0</color>
+    <color name="colorChipBorderColor">#C8C8E0</color>
+
+    <!-- Circle background (empty state icon, settings button) -->
+    <color name="colorCircleBg">#F0EFFF</color>
+
+    <!-- Legacy aliases -->
+    <color name="background">#F2F2FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="accent">#6C63FF</color>
+    <color name="text_primary">#0A0A0F</color>
+    <color name="text_secondary">#7777AA</color>
+    <color name="divider">#E0E0F0</color>
+    <color name="ic_launcher_background">#6C63FF</color>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode colours -->
+    <color name="colorBackground">#0A0A0F</color>
+    <color name="colorSurface">#13131A</color>
+    <color name="colorSurfaceVariant">#1C1C27</color>
+    <color name="colorAccent">#6C63FF</color>
+    <color name="colorAccentSecondary">#FF6B9D</color>
+    <color name="colorSuccess">#00D9A3</color>
+    <color name="colorError">#FF4757</color>
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorTextSecondary">#8888AA</color>
+    <color name="colorBorder">#2A2A3A</color>
+    <color name="colorCardShadow">#40000000</color>
+
+    <!-- Chip tokens (dark) -->
+    <color name="colorChipText">#8888AA</color>
+    <color name="colorChipBg">#1C1C27</color>
+    <color name="colorChipBorderColor">#2A2A3A</color>
+
+    <!-- Circle background (dark) -->
+    <color name="colorCircleBg">#1C1C27</color>
+
+    <!-- Legacy aliases -->
+    <color name="background">#0A0A0F</color>
+    <color name="surface">#13131A</color>
+    <color name="accent">#6C63FF</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#8888AA</color>
+    <color name="divider">#2A2A3A</color>
+    <color name="ic_launcher_background">#0A0A0F</color>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VideoSaver</string>
+    <string name="url_hint">Paste video link here…</string>
+    <string name="paste">Paste</string>
+    <string name="download">Download Video</string>
+    <string name="history_label">Recent Downloads</string>
+    <string name="clear_all">Clear All</string>
+    <string name="no_downloads_title">No downloads yet</string>
+    <string name="no_downloads_subtitle">Paste a TikTok, Twitter, or Instagram link above to get started</string>
+    <string name="downloading_from">Downloading from %s…</string>
+    <string name="stat_total">Total Videos</string>
+    <string name="stat_storage">Storage Used</string>
+    <string name="stat_today">Today</string>
+    <string name="chip_all">All</string>
+    <string name="chip_tiktok">TikTok</string>
+    <string name="chip_twitter">Twitter</string>
+    <string name="chip_instagram">Instagram</string>
+    <string name="option_play">Play</string>
+    <string name="option_share">Share</string>
+    <string name="option_delete">Delete</string>
+    <string name="unsupported_url">Unsupported URL. Paste a TikTok, Twitter, or Instagram link.</string>
+</resources>
