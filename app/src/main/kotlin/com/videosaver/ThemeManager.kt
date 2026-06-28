@@ -2,6 +2,7 @@ package com.videosaver
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.videosaver.prefs.AppPrefs
 
 object ThemeManager {
     const val MODE_LIGHT = "light"
@@ -16,13 +17,7 @@ object ThemeManager {
         }
     }
 
-    fun getSavedMode(context: Context): String {
-        return context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            .getString("theme_mode", MODE_SYSTEM) ?: MODE_SYSTEM
-    }
+    fun getSavedMode(context: Context): String = AppPrefs.getThemeMode(context)
 
-    fun saveMode(context: Context, mode: String) {
-        context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-            .edit().putString("theme_mode", mode).apply()
-    }
+    fun saveMode(context: Context, mode: String) = AppPrefs.saveThemeMode(context, mode)
 }

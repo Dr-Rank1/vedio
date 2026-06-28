@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Thumbnail (16:9 ratio) -->
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="0dp"
@@ -26,7 +25,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintDimensionRatio="16:9" />
 
-        <!-- Gradient overlay on thumbnail bottom -->
         <View
             android:id="@+id/gradientOverlay"
             android:layout_width="0dp"
@@ -37,7 +35,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Platform badge (top-right of thumbnail) -->
         <TextView
             android:id="@+id/platformBadge"
             android:layout_width="wrap_content"
@@ -54,7 +51,25 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Bottom info section -->
+        <TextView
+            android:id="@+id/missingBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/file_missing_badge"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/chip_unselected_bg"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -97,6 +112,27 @@
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="11sp" />
 
+                <ImageButton
+                    android:id="@+id/shareButton"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_share"
+                    android:scaleType="fitCenter"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/option_share"
+                    app:tint="@color/colorTextSecondary" />
+
+                <ImageButton
+                    android:id="@+id/deleteButton"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_delete"
+                    android:scaleType="fitCenter"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/option_delete"
+                    app:tint="@color/colorError"
+                    android:layout_marginStart="4dp" />
+
                 <ImageView
                     android:id="@+id/playButton"
                     android:layout_width="28dp"
@@ -104,7 +140,8 @@
                     android:src="@drawable/ic_play_circle"
                     android:scaleType="fitCenter"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Play video" />
+                    android:contentDescription="@string/option_play"
+                    android:layout_marginStart="4dp" />
             </LinearLayout>
         </LinearLayout>
 

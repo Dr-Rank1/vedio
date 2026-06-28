@@ -1,6 +1,10 @@
 package com.videosaver
 
+import android.content.Context
 import android.util.Log
+import com.videosaver.prefs.AppPrefs
+import com.videosaver.util.Platform
+import com.videosaver.util.UrlNormalizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -10,44 +14,105 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.net.URLEncoder
 
+data class DownloadOptions(
+    val hdQuality: Boolean = true,
+    val removeTikTokWatermark: Boolean = true,
+)
+
+enum class DownloadFailureReason {
+    UNSUPPORTED,
+    PRIVATE_OR_UNAVAILABLE,
+    NETWORK,
+    SERVICE_UNAVAILABLE,
+    PARSE_ERROR,
+}
+
+sealed class DownloadResult {
+    data class Success(val videoUrl: String, val provider: String) : DownloadResult()
+    data class Failure(val message: String, val reason: DownloadFailureReason) : DownloadResult()
+}
+
 object DownloadHelper {
 
     private const val TAG = "DownloadHelper"
     private const val MAX_RETRIES = 2
 
-    suspend fun getVideoUrl(url: String): String? = withContext(Dispatchers.IO) {
-        for (attempt in 1..MAX_RETRIES) {
-            Log.d(TAG, "Attempt $attempt for: $url")
-            val result = runCatching {
-                when {
-                    url.contains("tiktok.com") -> getTikTokVideoUrl(url)
-                    url.contains("twitter.com") || url.contains("x.com") -> getTwitterVideoUrl(url)
-                    url.contains("instagram.com") -> getInstagramVideoUrl(url)
-                    else -> return@withContext null
-                }
-            }.getOrElse {
-                Log.e(TAG, "Attempt $attempt threw: ${it.message}")
-                null
-            }
-            if (result != null) return@withContext result
-            if (attempt < MAX_RETRIES) {
-                Log.d(TAG, "Attempt $attempt failed, retrying in 500ms…")
-                delay(500)
-            }
+    suspend fun resolveVideoUrl(
+        context: Context,
+        pageUrl: String,
+        options: DownloadOptions = DownloadOptions(),
+    ): DownloadResult = withContext(Dispatchers.IO) {
+        val url = UrlNormalizer.normalize(pageUrl)
+        when (UrlNormalizer.detectPlatform(url)) {
+            Platform.TIKTOK -> resolveWithRetry { getTikTokVideoUrl(context, url, options) }
+            Platform.TWITTER -> resolveWithRetry { getTwitterVideoUrl(url) }
+            Platform.INSTAGRAM -> resolveWithRetry { getInstagramVideoUrl(context, url) }
+            Platform.UNKNOWN -> DownloadResult.Failure(
+                message = "Unsupported link. Paste a TikTok, Twitter/X, or Instagram URL.",
+                reason = DownloadFailureReason.UNSUPPORTED,
+            )
         }
-        Log.e(TAG, "All $MAX_RETRIES attempts failed for: $url")
-        null
     }
 
-    private fun getTikTokVideoUrl(url: String): String? =
-        tryTikWmPost(url) ?: tryTikWmGet(url)
+    private suspend fun resolveWithRetry(
+        block: suspend () -> ProviderResult?,
+    ): DownloadResult {
+        var lastError = DownloadResult.Failure(
+            message = "Could not fetch video. The link may be private, deleted, or temporarily unavailable.",
+            reason = DownloadFailureReason.PRIVATE_OR_UNAVAILABLE,
+        )
+        repeat(MAX_RETRIES) { attempt ->
+            Log.d(TAG, "Attempt ${attempt + 1}")
+            val result = runCatching { block() }.getOrElse {
+                Log.e(TAG, "Attempt ${attempt + 1} threw: ${it.message}")
+                null
+            }
+            when {
+                result?.url != null -> return DownloadResult.Success(result.url, result.provider)
+                result?.failure != null -> lastError = result.failure
+            }
+            if (attempt < MAX_RETRIES - 1) delay(500)
+        }
+        return lastError
+    }
 
-    private fun tryTikWmPost(url: String): String? {
+    private data class ProviderResult(
+        val url: String? = null,
+        val provider: String = "",
+        val failure: DownloadResult.Failure? = null,
+    )
+
+    private suspend fun getTikTokVideoUrl(
+        context: Context,
+        url: String,
+        options: DownloadOptions,
+    ): ProviderResult? {
+        val cached = AppPrefs.getCachedEndpoint(context, AppPrefs.KEY_TIKTOK_ENDPOINT)
+        val order = listOf(AppPrefs.ENDPOINT_TIKWM_POST, AppPrefs.ENDPOINT_TIKWM_GET)
+            .sortedByDescending { it == cached }
+        for (endpoint in order) {
+            val resolved = when (endpoint) {
+                AppPrefs.ENDPOINT_TIKWM_POST -> tryTikWmPost(url, options)
+                else -> tryTikWmGet(url, options)
+            }
+            if (resolved != null) {
+                AppPrefs.setCachedEndpoint(context, AppPrefs.KEY_TIKTOK_ENDPOINT, endpoint)
+                return ProviderResult(resolved, endpoint)
+            }
+        }
+        return ProviderResult(
+            failure = DownloadResult.Failure(
+                message = "TikTok download service is unavailable right now. Try again in a few minutes.",
+                reason = DownloadFailureReason.SERVICE_UNAVAILABLE,
+            )
+        )
+    }
+
+    private fun tryTikWmPost(url: String, options: DownloadOptions): String? {
         return try {
-            val encodedUrl = URLEncoder.encode(url, "UTF-8")
             val formBody = FormBody.Builder()
-                .add("url", encodedUrl)
-                .add("hd", "1")
+                .add("url", url)
+                .add("hd", if (options.hdQuality) "1" else "0")
                 .build()
             val request = Request.Builder()
                 .url("https://tikwm.com/api/")
@@ -56,14 +121,14 @@ object DownloadHelper {
                 .build()
             val response = HttpClientProvider.client.newCall(request).execute()
             if (!response.isSuccessful) return null
-            parseTikWmResponse(response.body?.string() ?: return null)
+            parseTikWmResponse(response.body?.string() ?: return null, options)
         } catch (e: Exception) {
             Log.e(TAG, "TikWM POST: ${e.message}")
             null
         }
     }
 
-    private fun tryTikWmGet(url: String): String? {
+    private fun tryTikWmGet(url: String, options: DownloadOptions): String? {
         return try {
             val encodedUrl = URLEncoder.encode(url, "UTF-8")
             val request = Request.Builder()
@@ -72,45 +137,72 @@ object DownloadHelper {
                 .build()
             val response = HttpClientProvider.client.newCall(request).execute()
             if (!response.isSuccessful) return null
-            parseTikWmResponse(response.body?.string() ?: return null)
+            parseTikWmResponse(response.body?.string() ?: return null, options)
         } catch (e: Exception) {
             Log.e(TAG, "TikWM GET: ${e.message}")
             null
         }
     }
 
-    private fun parseTikWmResponse(body: String): String? {
-        return try {
-            val data = JSONObject(body).optJSONObject("data") ?: return null
-            val play = data.optString("play").takeIf { it.startsWith("http") }
-            val wmPlay = data.optString("wmplay").takeIf { it.startsWith("http") }
-            play ?: wmPlay
-        } catch (e: Exception) {
-            Log.e(TAG, "TikWM parse: ${e.message}")
-            null
-        }
-    }
+    internal fun parseTikWmResponse(body: String, options: DownloadOptions): String? =
+        TikWmParser.parse(body, options)
 
-    private fun getTwitterVideoUrl(url: String): String? {
+    private fun getTwitterVideoUrl(url: String): ProviderResult? {
         return try {
             val encodedUrl = URLEncoder.encode(url, "UTF-8")
             val request = Request.Builder()
                 .url("https://twitsave.com/info?url=$encodedUrl")
                 .build()
             val response = HttpClientProvider.client.newCall(request).execute()
-            if (!response.isSuccessful) return null
+            if (!response.isSuccessful) {
+                return ProviderResult(
+                    failure = DownloadResult.Failure(
+                        message = "Twitter/X download service is unavailable right now. Try again later.",
+                        reason = DownloadFailureReason.SERVICE_UNAVAILABLE,
+                    )
+                )
+            }
             val html = response.body?.string() ?: return null
-            val doc = Jsoup.parse(html)
-            doc.select("a[href$=.mp4]").firstOrNull()?.attr("href")
-                ?.takeIf { it.startsWith("http") }
+            val videoUrl = Jsoup.parse(html).select("a[href$=.mp4]").firstOrNull()?.attr("href")
+                ?.takeIf { it.startsWith("https://") }
+            if (videoUrl != null) ProviderResult(videoUrl, "twitsave") else ProviderResult(
+                failure = DownloadResult.Failure(
+                    message = "No video found on this tweet. It may be text-only or protected.",
+                    reason = DownloadFailureReason.PRIVATE_OR_UNAVAILABLE,
+                )
+            )
         } catch (e: Exception) {
             Log.e(TAG, "Twitter: ${e.message}")
-            null
+            ProviderResult(
+                failure = DownloadResult.Failure(
+                    message = "Network error while fetching Twitter/X video. Check your connection.",
+                    reason = DownloadFailureReason.NETWORK,
+                )
+            )
         }
     }
 
-    private fun getInstagramVideoUrl(url: String): String? =
-        trySnapSave(url) ?: tryFastDL(url)
+    private suspend fun getInstagramVideoUrl(context: Context, url: String): ProviderResult? {
+        val cached = AppPrefs.getCachedEndpoint(context, AppPrefs.KEY_INSTAGRAM_ENDPOINT)
+        val order = listOf(AppPrefs.ENDPOINT_SNAPSAVE, AppPrefs.ENDPOINT_FASTDL)
+            .sortedByDescending { it == cached }
+        for (endpoint in order) {
+            val resolved = when (endpoint) {
+                AppPrefs.ENDPOINT_SNAPSAVE -> trySnapSave(url)
+                else -> tryFastDL(url)
+            }
+            if (resolved != null) {
+                AppPrefs.setCachedEndpoint(context, AppPrefs.KEY_INSTAGRAM_ENDPOINT, endpoint)
+                return ProviderResult(resolved, endpoint)
+            }
+        }
+        return ProviderResult(
+            failure = DownloadResult.Failure(
+                message = "Instagram download service is unavailable right now. Try again in a few minutes.",
+                reason = DownloadFailureReason.SERVICE_UNAVAILABLE,
+            )
+        )
+    }
 
     private fun trySnapSave(url: String): String? {
         return try {
@@ -124,7 +216,7 @@ object DownloadHelper {
             val response = HttpClientProvider.client.newCall(request).execute()
             if (!response.isSuccessful) return null
             val body = response.body?.string() ?: return null
-            JSONObject(body).optString("url").takeIf { it.startsWith("http") }
+            JSONObject(body).optString("url").takeIf { it.startsWith("https://") }
         } catch (e: Exception) {
             Log.e(TAG, "SnapSave: ${e.message}")
             null
@@ -140,7 +232,7 @@ object DownloadHelper {
             val response = HttpClientProvider.client.newCall(request).execute()
             if (!response.isSuccessful) return null
             val body = response.body?.string() ?: return null
-            JSONObject(body).optString("download_url").takeIf { it.startsWith("http") }
+            JSONObject(body).optString("download_url").takeIf { it.startsWith("https://") }
         } catch (e: Exception) {
             Log.e(TAG, "FastDL: ${e.message}")
             null

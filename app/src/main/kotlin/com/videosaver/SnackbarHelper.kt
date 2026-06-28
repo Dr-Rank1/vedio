@@ -20,6 +20,23 @@ object SnackbarHelper {
         show(view, message, "#1C1C27", Snackbar.LENGTH_SHORT)
     }
 
+    fun showUndo(view: View, message: String, actionLabel: String, onUndo: () -> Unit) {
+        val snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+        snackbar.setAction(actionLabel) { onUndo() }
+        snackbar.setActionTextColor(Color.parseColor("#6C63FF"))
+        val snackbarView = snackbar.view
+        val radius = 12f * view.context.resources.displayMetrics.density
+        snackbarView.background = GradientDrawable().apply {
+            setColor(Color.parseColor("#1C1C27"))
+            cornerRadius = radius
+        }
+        val params = snackbarView.layoutParams as? ViewGroup.MarginLayoutParams
+        val margin = (16 * view.context.resources.displayMetrics.density).toInt()
+        params?.setMargins(margin, 0, margin, margin)
+        snackbarView.layoutParams = params
+        snackbar.show()
+    }
+
     private fun show(view: View, message: String, colorHex: String, duration: Int) {
         val snackbar = Snackbar.make(view, message, duration)
         val snackbarView = snackbar.view

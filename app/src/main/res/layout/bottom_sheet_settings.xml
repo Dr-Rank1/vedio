@@ -244,6 +244,57 @@
                 android:checked="true" />
         </LinearLayout>
 
+        <!-- Wi-Fi only switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wifi_only"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wifi_only_summary"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchWifiOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnResetSaveLocation"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/reset_save_location"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="15sp"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -290,6 +341,20 @@
             android:clickable="true"
             android:focusable="true" />
 
+        <TextView
+            android:id="@+id/btnDeleteMissing"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/delete_missing_entries"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="15sp"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true" />
+
         <!-- Clear Cache -->
         <TextView
             android:id="@+id/btnClearCache"
@@ -307,6 +372,7 @@
 
         <!-- Version -->
         <TextView
+            android:id="@+id/txtVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="VideoSaver v1.0"

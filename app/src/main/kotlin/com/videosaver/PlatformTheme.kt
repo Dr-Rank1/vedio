@@ -1,6 +1,8 @@
 package com.videosaver
 
 import android.graphics.Color
+import com.videosaver.util.Platform
+import com.videosaver.util.UrlNormalizer
 
 data class PlatformTheme(
     val platform: String,
@@ -59,10 +61,10 @@ object PlatformThemeProvider {
         backgroundTint = Color.parseColor("#0A0A0F")
     )
 
-    fun fromUrl(url: String): PlatformTheme = when {
-        url.contains("tiktok.com") -> TIKTOK
-        url.contains("twitter.com") || url.contains("x.com") -> TWITTER
-        url.contains("instagram.com") -> INSTAGRAM
-        else -> DEFAULT
+    fun fromUrl(url: String): PlatformTheme = when (UrlNormalizer.detectPlatform(url)) {
+        Platform.TIKTOK -> TIKTOK
+        Platform.TWITTER -> TWITTER
+        Platform.INSTAGRAM -> INSTAGRAM
+        Platform.UNKNOWN -> DEFAULT
     }
 }

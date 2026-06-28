@@ -1,25 +1,24 @@
-# TwitterIG
+# VideoSaver
 
+Android app for downloading videos from TikTok, Twitter/X, and Instagram.
 
-This project uses [Gradle](https://gradle.org/).
-To build and run the application, use the *Gradle* tool window by clicking the Gradle icon in the right-hand toolbar,
-or run it directly from the terminal:
+## Build
 
-* Run `./gradlew run` to build and run the application.
-* Run `./gradlew build` to only build the application.
-* Run `./gradlew check` to run all checks, including tests.
-* Run `./gradlew clean` to clean all build outputs.
+Requires JDK 17 and the Android SDK (API 35).
 
-Note the usage of the Gradle Wrapper (`./gradlew`).
-This is the suggested way to use Gradle in production projects.
+```bash
+./gradlew assembleDebug
+./gradlew lintDebug
+./gradlew test
+./gradlew assembleRelease   # requires keystore.properties
+```
 
-[Learn more about the Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
+Release signing reads credentials from `keystore.properties` (not committed).
 
-[Learn more about Gradle tasks](https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks).
+## Architecture
 
-
-This project follows the suggested multi-module setup and consists of the `app` and `utils` subprojects.
-The shared build logic was extracted to a convention plugin located in `buildSrc`.
-
-This project uses a version catalog (see `gradle/libs.versions.toml`) to declare and version dependencies
-and both a build cache and a configuration cache (see `gradle.properties`).
+- `app/` — Android application
+- `gradle/libs.versions.toml` — dependency version catalog
+- Room database for download history (migrated automatically from legacy SharedPreferences)
+- WorkManager for background downloads with progress tracking
+- Custom save folder via Storage Access Framework (Settings)

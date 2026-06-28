@@ -42,6 +42,7 @@ bin/
 .vscode/
 
 ### Mac OS ###
-.DS_Storelocal.properties
+.DS_Store
+local.properties
 videosaver-release.jks
 keystore.properties

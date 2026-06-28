@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:fitsSystemWindows="true">
 
-    <!-- ===== HEADER BAR ===== -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -25,7 +26,7 @@
             android:gravity="center_vertical"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:paddingTop="20dp"
+            android:paddingTop="12dp"
             android:paddingBottom="12dp">
 
             <TextView
@@ -39,18 +40,28 @@
                 android:letterSpacing="-0.02" />
 
             <ImageButton
+                android:id="@+id/sortButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_download"
+                android:background="@drawable/bg_settings_btn"
+                android:padding="9dp"
+                app:tint="@color/colorAccent"
+                android:contentDescription="@string/sort"
+                android:layout_marginEnd="8dp" />
+
+            <ImageButton
                 android:id="@+id/settingsButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_settings"
                 android:background="@drawable/bg_settings_btn"
                 android:padding="9dp"
-                android:tint="@color/colorAccent"
-                android:contentDescription="Settings" />
+                app:tint="@color/colorAccent"
+                android:contentDescription="@string/settings_title" />
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- ===== PLATFORM LABEL ===== -->
     <TextView
         android:id="@+id/platformLabel"
         android:layout_width="wrap_content"
@@ -65,7 +76,6 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- ===== PLATFORM FILTER CHIPS ===== -->
     <HorizontalScrollView
         android:id="@+id/platformTabsContainer"
         android:layout_width="0dp"
@@ -118,7 +128,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center"
-                android:background="@drawable/bg_chip_unselected"
+                android:background="@drawable/chip_unselected_bg"
                 android:layout_marginEnd="8dp"
                 android:clickable="true"
                 android:focusable="true" />
@@ -137,7 +147,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center"
-                android:background="@drawable/bg_chip_unselected"
+                android:background="@drawable/chip_unselected_bg"
                 android:layout_marginEnd="8dp"
                 android:clickable="true"
                 android:focusable="true" />
@@ -156,21 +166,18 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center"
-                android:background="@drawable/bg_chip_unselected"
+                android:background="@drawable/chip_unselected_bg"
                 android:clickable="true"
                 android:focusable="true" />
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- ===== SCROLLABLE MAIN CONTENT ===== -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:overScrollMode="never"
-        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/platformTabsContainer"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -179,7 +186,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ===== URL INPUT CARD ===== -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/inputCard"
                 android:layout_width="match_parent"
@@ -210,7 +216,7 @@
                         android:src="@drawable/ic_link"
                         android:scaleType="fitCenter"
                         android:layout_marginEnd="10dp"
-                        android:tint="@color/colorTextSecondary"
+                        app:tint="@color/colorTextSecondary"
                         android:contentDescription="Platform" />
 
                     <EditText
@@ -250,7 +256,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ===== DOWNLOAD BUTTON ===== -->
             <Button
                 android:id="@+id/downloadButton"
                 android:layout_width="match_parent"
@@ -269,7 +274,6 @@
                 android:drawableTint="@android:color/white"
                 android:elevation="6dp" />
 
-            <!-- ===== PROGRESS CARD (hidden by default) ===== -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/progressCard"
                 android:layout_width="match_parent"
@@ -329,7 +333,7 @@
                             android:src="@drawable/ic_close"
                             android:background="@drawable/chip_unselected_bg"
                             android:padding="6dp"
-                            android:tint="@color/colorError"
+                            app:tint="@color/colorError"
                             android:contentDescription="Cancel download" />
                     </LinearLayout>
 
@@ -363,7 +367,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ===== STATS ROW ===== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -373,7 +376,6 @@
                 android:paddingTop="16dp"
                 android:baselineAligned="false">
 
-                <!-- Total Videos -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -422,7 +424,6 @@
 
                 <Space android:layout_width="8dp" android:layout_height="0dp" />
 
-                <!-- Storage Used -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -471,7 +472,6 @@
 
                 <Space android:layout_width="8dp" android:layout_height="0dp" />
 
-                <!-- Today -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -519,99 +519,162 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- ===== HISTORY SECTION HEADER ===== -->
             <LinearLayout
+                android:id="@+id/historyHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="8dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/history_label"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/history_label"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.01" />
+
+                    <TextView
+                        android:id="@+id/clearAllButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/clear_all"
+                        android:textColor="@color/colorError"
+                        android:textSize="13sp"
+                        android:padding="4dp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/searchInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/search_hint"
                     android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.01" />
-
-                <TextView
-                    android:id="@+id/clearAllButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/clear_all"
-                    android:textColor="@color/colorError"
-                    android:textSize="13sp"
-                    android:padding="4dp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:textColorHint="@color/colorTextSecondary"
+                    android:textSize="14sp"
+                    android:background="@drawable/chip_unselected_bg"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true" />
             </LinearLayout>
-
-            <!-- ===== EMPTY STATE ===== -->
-            <LinearLayout
-                android:id="@+id/emptyState"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="48dp"
-                android:paddingBottom="48dp"
-                android:visibility="gone">
-
-                <FrameLayout
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/bg_empty_state_circle">
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_empty_state"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="No downloads" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_downloads_title"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_downloads_subtitle"
-                    android:textColor="@color/colorTextSecondary"
-                    android:textSize="13sp"
-                    android:gravity="center"
-                    android:maxWidth="260dp"
-                    android:lineSpacingMultiplier="1.5"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp" />
-            </LinearLayout>
-
-            <!-- ===== HISTORY RECYCLERVIEW ===== -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/historyRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="16dp"
-                android:clipToPadding="false"
-                android:overScrollMode="never" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:nestedScrollingEnabled="true"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/scrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/scrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_empty_state_circle">
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_empty_state"
+                android:scaleType="fitCenter"
+                android:contentDescription="No downloads" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_downloads_title"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_downloads_subtitle"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:maxWidth="260dp"
+            android:lineSpacingMultiplier="1.5"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filterEmptyState"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/scrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_empty_title"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_empty_subtitle"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:maxWidth="260dp"
+            android:lineSpacingMultiplier="1.5"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

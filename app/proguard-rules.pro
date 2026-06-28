@@ -26,6 +26,11 @@
 # App models
 -keep class com.videosaver.HistoryItem { *; }
 -keep class com.videosaver.PlatformTheme { *; }
+-keep class com.videosaver.data.** { *; }
+
+# Room
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn androidx.room.paging.**
 
 # Prevent stripping R8 from crashing on missing classes
 -dontwarn javax.annotation.**
